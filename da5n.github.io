@@ -61,6 +61,9 @@
     <p class="second-paragraph">prueba</p>
     <ul id="user-list"></ul>
 
+    <!-- Enlace al nuevo repositorio -->
+    <a href="https://github.com/da5nx/da5n.github.io/blob/da5n.github.io/formulario/" target="_blank">Ir al repositorio de mazos</a>
+
     <script>
         // Cargar la lista de usuarios desde la API
         fetch("https://api.github.com/users")
