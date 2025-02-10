@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>da5nx.github.io</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+            position: relative;
+        }
+
+        #user-container, #data-container {
+            background-color: lightgray;
+            padding: 15px;
+            border-radius: 10px;
+            width: 80%;
+            max-width: 400px;
+        }
+
+        #user-container {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+        }
+
+        #data-container {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+        .data-item, .user-item {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin: 5px 0;
+        }
+
+        .save-btn {
+            margin-top: 10px;
+            padding: 5px 10px;
+            cursor: pointer;
+            background-color: green;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .first-paragraph {
+            color: blue;
+            font-size: 20px;
+        }
+
+        .second-paragraph {
+            color: green;
+            font-size: 24px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>MAGIC</h1>
+    <h2>Listas mazos</h2>
+    <p class="first-paragraph">Ingresar mazo.</p>
+    <p class="second-paragraph">detalles</p>
+
+    <div id="data-container">
+        <h3>Ingresar Datos</h3>
+        <input type="text" id="deck" placeholder="Nombre del mazo">
+        <input type="text" id="dueño" placeholder="Nombre del dueño">
+        <input type="text" id="creador" placeholder="Nombre del creador">
+        <input type="text" id="de_precon" placeholder="Precon?">
+        <input type="text" id="modificado" placeholder="Mazo modificado">
+        <input type="text" id="clase" placeholder="Clase del mazo">
+        <button class="save-btn" onclick="guardarDatos()">Guardar Datos</button>
+    </div>
+
+    <div id="user-container">
+        <h3>Datos Guardados</h3>
+        <ul id="data-list"></ul>
+    </div>
+
+    <script>
+        const API_KEY = 'dan-70745132121234569846556';  // Reemplaza esto con tu clave de API
+        const SHEET_ID = 'https://docs.google.com/spreadsheets/d/1MpbzGootI5Miphba0rhnDaGD0SH17zPzm_TMoN_tzo0/edit?gid=1760266108#gid=1760266108'; // ID de la hoja de Google Sheets
+        const SHEET_NAME = 'Respuestas de formulario 1';     // Nombre de la pestaña en Google Sheets
+
+        function guardarDatos() {
+            const deck = document.getElementById('deck').value;
+            const dueño = document.getElementById('dueño').value;
+            const creador = document.getElementById('creador').value;
+            const de_precon = document.getElementById('de_precon').value;
+            const modificado = document.getElementById('modificado').value;
+            const clase = document.getElementById('clase').value;
+
+            if (dueño && deck && creador && de_precon && modificado && clase) {
+                const datos = [dueño, deck, creador, de_precon, modificado, clase];
+
+                fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}!A1:append?valueInputOption=RAW&key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ values: [datos] })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert('Datos guardados en Google Sheets.');
+                    mostrarDatos();
+                })
+                .catch(error => console.error('Error al guardar en Google Sheets:', error));
+
+                document.getElementById('dueño').value = '';
+                document.getElementById('deck').value = '';
+                document.getElementById('creador').value = '';
+                document.getElementById('de_precon').value = '';
+                document.getElementById('modificado').value = '';
+                document.getElementById('clase').value = '';
+            } else {
+                alert('Por favor, complete todos los campos.');
+            }
+        }
+
+        function mostrarDatos() {
+            const dataList = document.getElementById('data-list');
+            dataList.innerHTML = '';
+
+            // Cargar datos desde Google Sheets
+            fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}?key=${API_KEY}`)
+                .then(response => response.json())
+                .then(data => {
+                    const rows = data.values || [];
+                    rows.forEach((item) => {
+                        const li = document.createElement('li');
+                        li.classList.add('data-item');
+                        li.innerHTML = `
+                            <strong>Mazo:</strong> ${item[1]}<br>
+                            <strong>Dueño:</strong> ${item[0]}<br>
+                            <strong>Creador:</strong> ${item[2]}<br>
+                            <strong>Precon:</strong> ${item[3]}<br>
+                            <strong>Modificado:</strong> ${item[4]}<br>
+                            <strong>Clase:</strong> ${item[5]}
+                        `;
+                        dataList.appendChild(li);
+                    });
+                })
+                .catch(error => console.error('Error al cargar datos:', error));
+        }
+
+        document.addEventListener('DOMContentLoaded', mostrarDatos);
+    </script>
+</body>
+</html>
