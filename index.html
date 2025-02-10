@@ -93,8 +93,12 @@
 
     <script>
         function guardarDatos() {
-            const username = document.getElementById('username').value;
             const deck = document.getElementById('deck').value;
+            const dueño = document.getElementById('dueño').value;
+            const creador = document.getElementById('creador').value;
+            const de_precon = document.getElementById('de_precon').value;
+            const modificado = document.getElementById('modificado').value;
+            const clase = document.getElementById('clase').value;
 
             if (username && deck) {
                 const datos = JSON.parse(localStorage.getItem('datos')) || [];
