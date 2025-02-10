@@ -88,9 +88,9 @@
     </div>
 
     <script>
-        const API_KEY = 'dan-70745132121234569846556';  // Reemplaza esto con tu clave de API
-        const SHEET_ID = 'https://docs.google.com/spreadsheets/d/1MpbzGootI5Miphba0rhnDaGD0SH17zPzm_TMoN_tzo0/edit?gid=1760266108#gid=1760266108'; // ID de la hoja de Google Sheets
-        const SHEET_NAME = 'Respuestas de formulario 1';     // Nombre de la pestaña en Google Sheets
+        const API_KEY = 'AIzaSyDVXiprwpI7xTEGZYzJY7gSC3XyXTQJtrs';  // Reemplaza esto con tu clave de API
+        const SHEET_ID = '1MpbzGootI5Miphba0rhnDaGD0SH17zPzm_TMoN_tzo0'; // ID corregido solo con el identificador
+        const SHEET_NAME = 'Hoja 4';     // Nombre de la pestaña en Google Sheets
 
         function guardarDatos() {
             const deck = document.getElementById('deck').value;
@@ -108,7 +108,12 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ values: [datos] })
                 })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error en la solicitud: ' + response.statusText);
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     alert('Datos guardados en Google Sheets.');
                     mostrarDatos();
@@ -130,9 +135,13 @@
             const dataList = document.getElementById('data-list');
             dataList.innerHTML = '';
 
-            // Cargar datos desde Google Sheets
             fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}?key=${API_KEY}`)
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error en la solicitud: ' + response.statusText);
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     const rows = data.values || [];
                     rows.forEach((item) => {
