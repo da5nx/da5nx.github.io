@@ -98,13 +98,17 @@
 
             if (username && deck) {
                 const datos = JSON.parse(localStorage.getItem('datos')) || [];
-                datos.push({ username, deck });
+                datos.push({ dueño, deck, creador, de_precon, modificado, clase });
                 localStorage.setItem('datos', JSON.stringify(datos));
 
                 mostrarDatos();
 
-                document.getElementById('username').value = '';
+                document.getElementById('dueño').value = '';
                 document.getElementById('deck').value = '';
+                document.getElementById('creador').value = '';
+                document.getElementById('de_precon').value = '';
+                document.getElementById('modificado').value = '';
+                document.getElementById('clase').value = '';
             } else {
                 alert('Por favor, complete ambos campos.');
             }
