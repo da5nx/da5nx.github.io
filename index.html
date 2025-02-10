@@ -70,7 +70,7 @@
     <h1>MAGIC</h1>
     <h2>Listas mazos</h2>
     <p class="first-paragraph">Ingresar mazo.</p>
-    <p class="second-paragraph">prueba</p>
+    <p class="second-paragraph">detalles</p>
     
     <div id="user-container">
         <h3>Usuarios de GitHub</h3>
@@ -93,7 +93,7 @@
                     input.value = user.login;
                     
                     let link = document.createElement("a");
-                    link.href = `prueba.html?user=USERNAME)}`;
+                    link.href = `detalles.html?user=${encodeURIComponent(user.login)}`;
                     link.textContent = "Ver detalles";
                     link.style.display = "block"; // Enlace en nueva línea
                     
