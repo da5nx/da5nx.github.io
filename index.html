@@ -93,7 +93,7 @@
                     input.value = user.login;
                     
                     let link = document.createElement("a");
-                    link.href = `detalles.html?user=USERNAME)}`;
+                    link.href = `detalles.html?user=${encodeURIComponent(user.login)}`;
                     link.textContent = "Ver detalles";
                     link.style.display = "block"; // Enlace en nueva línea
                     
