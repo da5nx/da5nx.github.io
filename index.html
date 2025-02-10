@@ -38,13 +38,9 @@
 
         .data-item, .user-item {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
+            align-items: flex-start;
             margin: 5px 0;
-        }
-
-        .data-item input, .user-item input {
-            width: 60%;
         }
 
         .save-btn {
@@ -100,7 +96,7 @@
             const modificado = document.getElementById('modificado').value;
             const clase = document.getElementById('clase').value;
 
-            if (username && deck) {
+            if (dueño && deck && creador && de_precon && modificado && clase) {
                 const datos = JSON.parse(localStorage.getItem('datos')) || [];
                 datos.push({ dueño, deck, creador, de_precon, modificado, clase });
                 localStorage.setItem('datos', JSON.stringify(datos));
@@ -114,7 +110,7 @@
                 document.getElementById('modificado').value = '';
                 document.getElementById('clase').value = '';
             } else {
-                alert('Por favor, complete ambos campos.');
+                alert('Por favor, complete todos los campos.');
             }
         }
 
@@ -127,7 +123,14 @@
             datos.forEach((item, index) => {
                 const li = document.createElement('li');
                 li.classList.add('data-item');
-                li.textContent = `${item.username} - ${item.deck}`;
+                li.innerHTML = `
+                    <strong>Mazo:</strong> ${item.deck}<br>
+                    <strong>Dueño:</strong> ${item.dueño}<br>
+                    <strong>Creador:</strong> ${item.creador}<br>
+                    <strong>Precon:</strong> ${item.de_precon}<br>
+                    <strong>Modificado:</strong> ${item.modificado}<br>
+                    <strong>Clase:</strong> ${item.clase}
+                `;
                 dataList.appendChild(li);
             });
         }
@@ -136,3 +139,4 @@
     </script>
 </body>
 </html>
+
