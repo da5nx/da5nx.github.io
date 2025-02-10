@@ -52,19 +52,18 @@
             border: none;
             border-radius: 5px;
         }
+             /* Estilo específico para el primer párrafo */
+      .first-paragraph {
+        color: blue;
+        font-size: 20px;
+      }
 
-        /* Estilo específico para el primer párrafo */
-        .first-paragraph {
-            color: blue;
-            font-size: 20px;
-        }
-
-        /* Estilo específico para el segundo párrafo */
-        .second-paragraph {
-            color: green;
-            font-size: 24px;
-            font-weight: bold;
-        }
+      /* Estilo específico para el segundo párrafo */
+      .second-paragraph {
+        color: green;
+        font-size: 24px;
+        font-weight: bold;
+      }
     </style>
 </head>
 <body>
@@ -80,18 +79,12 @@
     </div>
 
     <script>
-        // Datos de ejemplo que quieres guardar
-        let datos = {
-            usuarios: []
-        };
-
-        // Función para obtener usuarios de GitHub
         fetch("https://api.github.com/users")
             .then(response => response.json())
             .then(data => {
                 let userList = document.getElementById("user-list");
                 let numUsuarios = 5; // Cambia este valor para mostrar más o menos usuarios
-                data.slice(0, numUsuarios).forEach(user => {
+                data.slice(0, numUsuarios).forEach(user => { // Aquí limitamos los usuarios
                     let li = document.createElement("li");
                     li.classList.add("user-item");
                     
@@ -100,7 +93,7 @@
                     input.value = user.login;
                     
                     let link = document.createElement("a");
-                    link.href = `detalles.html?user=${user.login}`;
+                    link.href = `detalles.html?user=USERNAME)}`;
                     link.textContent = "Ver detalles";
                     link.style.display = "block"; // Enlace en nueva línea
                     
@@ -109,69 +102,26 @@
                     li.appendChild(link);
                     
                     userList.appendChild(li);
-
-                    // Guardar usuarios en los datos
-                    datos.usuarios.push({ username: user.login });
                 });
             })
             .catch(error => console.error("Error al cargar usuarios:", error));
 
-        // Función para guardar cambios en GitHub
-        async function guardarCambios() {
-            const token = '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'; // Reemplaza con tu token
-            const repo = 'da5nx/da5nx/da5n.github.io/index.html'; // Reemplaza con tu usuario y repositorio
-            const rutaArchivo = 'da5nx/da5n.github.io/datos.json'; // Ruta del archivo en el repositorio
-            const url = `https://api.github.com/repos/${repo}/contents/${rutaArchivo}`;
-
-            // Obtener los valores actualizados de los inputs
+        function guardarCambios() {
             let inputs = document.querySelectorAll("#user-list input");
-            datos.usuarios = [];
+            let usuariosEditados = [];
+
             inputs.forEach(input => {
-                datos.usuarios.push({ username: input.value });
+                usuariosEditados.push({ username: input.value });
             });
 
-            // Convertir datos a JSON
-            const contenido = JSON.stringify(datos, null, 2);
-            const contenidoCodificado = btoa(contenido); // Codificar en base64
-
-            // Obtener el SHA del archivo actual (si existe)
-            let sha;
-            try {
-                const response = await fetch(url, {
-                    headers: {
-                        Authorization: `token ${token}`
-                    }
-                });
-                const data = await response.json();
-                sha = data.sha; // SHA del archivo actual
-            } catch (error) {
-                console.log('El archivo no existe, se creará uno nuevo.');
-            }
-
-            // Subir el archivo
-            const body = {
-                message: "Actualización de datos", // Mensaje del commit
-                content: contenidoCodificado, // Contenido del archivo
-                sha: sha // SHA del archivo actual (para actualizarlo)
-            };
-
-            fetch(url, {
-                method: 'PUT',
-                headers: {
-                    Authorization: `token ${token}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(body)
+            fetch("https://jsonplaceholder.typicode.com/posts", {
+                method: "POST",
+                body: JSON.stringify(usuariosEditados),
+                headers: { "Content-Type": "application/json" }
             })
             .then(response => response.json())
-            .then(data => {
-                console.log('Datos guardados correctamente:', data);
-                alert('Cambios guardados en GitHub.');
-            })
-            .catch(error => {
-                console.error('Error al guardar los datos:', error);
-                alert('Error al guardar los cambios.');
-            });
+            .then(data => alert("Datos guardados en el servidor!"))
+            .catch(error => console.error("Error al guardar:", error));
         }
     </script>
 </body>
